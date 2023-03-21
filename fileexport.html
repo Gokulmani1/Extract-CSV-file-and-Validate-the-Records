@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>File_Export</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        /* tr:nth-child(1){
+            text-align:left;
+     } */
+     .heading{
+    text-align:center; 
+    background-color: cadetblue;
+     color: beige;
+     font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.tabletopic{
+    text-align: center;
+    color: rgb(39, 197, 3);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.tabletopic1{
+    text-align: center;
+    color: rgb(197, 3, 3);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.tabletopic2{
+    text-align: center;
+   
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+button{
+    margin-left:150px;
+    
+}
+td:nth-child(2),td:nth-child(3),td:nth-child(5){
+  text-align-last: left;
+  
+}
+    </style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="fileexport.css"> -->
+</head>
+
+<body>
+    <h1 class="heading">File_handling</h1><br><br>
+    <div>
+        <div class=" container ">
+            <div class="row"><label for="file">
+                    <h4>Upload a file :&nbsp;&nbsp;</h4>
+                </label>&nbsp;
+                <input type="file" name="file" class="form-control w-25" id="file" accept=".txt"> <br>
+            </div>
+            <br><br>
+
+            <button class="btn btn-dark" id="btn" onclick="fileexport()"><span> to Extract the records</span></button>
+            <button class="btn btn-dark" id="btn" onclick="validatetxt()">Validate the records</button>
+        </div>
+
+        <br>
+        <hr>
+        <h4 style="color: rgb(222, 16, 16);" class="tabletopic" id="tabletopic"></h4>
+        <div class="container">
+            <table id="tbltxtdata" class=" table table-bordered table-hover text-center">
+                <thead id="tablehead">
+                    <tr>
+                        <th>S.no</th>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <h4 class="tabletopic2" id="totalvalues"></h4>
+            <h4 class="tabletopic1" id="goodvalues"></h4>
+            <h4 class="tabletopic" id="badvalues"></h4>
+        </div>
+    </div>
+    <script>
+
+        function fileexport() {
+
+            var files = document.getElementById("file").files;
+
+            if (files.length > 0) {
+                document.getElementById("tabletopic").innerHTML = "These are the records from the given  file";
+                var file = files[0];
+                var reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function (e) {
+
+                    var txtdata = e.target.result;
+                    console.log("target values", txtdata);
+                    var textdata = txtdata.split('#');
+                    var rowData = txtdata.split(',');
+                    console.log("Data from textFile", textdata);
+
+                    var tbodyEl = document.getElementById('tbltxtdata').getElementsByTagName('tbody')[0];
+                    tbodyEl.innerHTML = "";
+                    for (var row = 1; row < rowData.length; row++) {
+                        var newRow = tbodyEl.insertRow();
+                        rowColData = rowData[row].split('#');
+                        for (var col = 0; col < rowColData.length; col++) {
+                            var newCell = newRow.insertCell();
+                            newCell.innerHTML = rowColData[col];
+                        }
+                    }
+                }
+            }
+            else {
+                alert("select a file.");
+            }
+
+
+        }
+        let count =0;
+        const validatetxt = () => {
+
+            var table = document.getElementById('tbltxtdata');
+            const cells = table.querySelectorAll('td:nth-child(4)');
+            const columnValues = [];
+            cells.forEach(cell => {
+                columnValues.push(cell.textContent);
+
+            });
+
+            console.log("Date of birth from table", columnValues);
+            for (let i = 0; i < columnValues.length; i++) {
+
+                function dateIsValid(date) {
+                    return date instanceof Date && !isNaN(date);
+                }
+
+                if (dateIsValid(new Date(columnValues[i])) != true) {
+                    count++;
+                    
+                    let d =1+i;
+                    var element = document.querySelector('table tr:nth-child('+d+')');
+                    // var element = document.querySelector('table tr:nth-child('+(d)+') td:nth-child(4)');
+                    element.style.backgroundColor= '#d93a2b';
+                };
+            }
+            let gv =(columnValues.length-count);
+            document.getElementById("totalvalues").innerHTML="Total no.of Records = "+columnValues.length;
+            document.getElementById("goodvalues").innerHTML="No.of incorrect Records = " +count;
+            document.getElementById("badvalues").innerHTML="No.of correct records = "+gv;
+
+
+
+        }
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

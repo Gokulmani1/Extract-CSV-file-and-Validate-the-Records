@@ -1,0 +1,23 @@
+.heading{
+    text-align:center; 
+    background-color: cadetblue;
+     color: beige;
+     font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.tabletopic{
+    text-align: center;
+    color: rgb(197, 3, 3);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+button{
+    margin-left:150px;
+    
+}
+td:nth-child(2),td:nth-child(3),td:nth-child(5){
+  text-align-last: left;
+  
+}
+/* table tbody tr:nth-child(1) td:nth-child(1)
+{
+background-color:#0F3;
+}  */
